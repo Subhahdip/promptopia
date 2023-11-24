@@ -18,7 +18,7 @@ const handleSignOut: React.MouseEventHandler<HTMLButtonElement> = async (
 };
 
 const Nav = () => {
-  const userLogin = true; // You might want to dynamically manage this based on user authentication status
+  const { data: session } = useSession(); // You might want to dynamically manage this based on user authentication status
 
   const [providers, setProviders] = useState(null);
 
@@ -29,6 +29,9 @@ const Nav = () => {
     };
     findProviders(); // Call the function to make it work
   }, []);
+
+  console.log(session);
+  console.log(providers);
 
   const [toggleDropdown, setToggleDropdown] = useState(false);
 
@@ -45,7 +48,7 @@ const Nav = () => {
         <p className="logo_text">Promptopia</p>
       </Link>
       <div className="sm:flex hidden">
-        {userLogin ? (
+        {session?.user ? (
           <div className="flex gap-3 md:gap-5">
             <Link href="/create-prompt" className="black_btn">
               Create Post
@@ -60,17 +63,16 @@ const Nav = () => {
 
             <Link href="/profile">
               <Image
-                src="assets/images/logo.svg"
+                src={session.user.image}
                 alt="profile image"
-                width={20}
-                height={20}
+                width={37}
+                height={37}
                 className="rounded-full"
               />
             </Link>
           </div>
         ) : (
           <>
-            Sign In
             {providers &&
               Object.values(providers).map((provider) => (
                 <button
@@ -87,10 +89,10 @@ const Nav = () => {
       </div>
 
       <div className="sm:hidden flex relative">
-        {userLogin ? (
+        {session?.user ? (
           <div className="flex">
             <Image
-              src="assets/images/logo.svg"
+              src={session.user.image}
               width={37}
               height={37}
               className="rounded-full"
